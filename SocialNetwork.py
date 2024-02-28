@@ -19,6 +19,7 @@ class SocialNetwork:
         self._users = {}  # map between name to the user object
         print("The social network " + name + " was created!")
 
+   #Check if user can sing up and if yes update is name in dict
     def sign_up(self, name, password):
         if len(password) < 4 or len(password) > 8:
             raise Exception("This password not good")
@@ -28,6 +29,7 @@ class SocialNetwork:
         self._users[name] = new_user
         return self._users[name]
 
+    #Update if user log in
     def log_in(self, name, password):
         if name not in self._users:
             raise Exception("The user not logged in")
@@ -39,6 +41,7 @@ class SocialNetwork:
             else:
                 raise Exception("The password is wrong")
 
+    #Update if user log out
     def log_out(self, name):
         if name not in self._users:
             raise Exception("The user don't sign up")
@@ -50,8 +53,9 @@ class SocialNetwork:
         print(f"{name} disconnected")
         return True
 
+    #string to string for network
     def __str__(self):
-        p=self.name+" social network:"
+        p = self.name+" social network:"
         for k,v in self._users.items():
             p += "\n" +v.__str__()
         return p

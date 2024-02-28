@@ -5,8 +5,10 @@ from Observe import Observe
 
 
 class Post(ABC):
+    #use observe
     obs = Observe()
 
+   #Constructor of the post
     def __init__(self, creator):
         self._likes = set()
         self.comments = []
@@ -14,12 +16,11 @@ class Post(ABC):
         if not self._creator.online:
             raise Exception("user can't create post without log in")
 
+    #get thr creator of the post
     def get_creator(self):
         return self._creator
 
-    # def get_user(self):
-    #     return self._creator
-
+    #User doing like to post
     def like(self, user):
         if not user.online:
             raise Exception("user can't do like without log in")
@@ -29,6 +30,7 @@ class Post(ABC):
             self._creator.update(msg)
             print(f"notification to {self._creator.str_name()}: {user.str_name()} liked your post")
 
+    #User do comment to post
     def comment(self, user, msg):
         if not user.online:
             raise Exception("user can't do comment without log in")
@@ -41,7 +43,8 @@ class Post(ABC):
 
 
 class PostFactory:
-
+    #Categorizes the post by its type.
+    #Factory design method
     def create_post(self, user, post_type, *args):
         if post_type == "Text":
             return TextPost(user, *args)
@@ -54,32 +57,38 @@ class PostFactory:
 
 
 class TextPost(Post):
+    # Constructor for to Text post
     def __init__(self, user, content):
         super().__init__(user)
         self._content = content
         print(self._creator.str_name() + " published a post:\n" + '"' + self._content + '"' + "\n")
 
+    #string to string function of text post
     def __str__(self):
         return self._creator.str_name() + " published a post:\n" + '"'+ self._content + '"'+ "\n"
 
 
 class ImagePost(Post):
+    # Constructor for to image post
     def __init__(self, user, path):
         super().__init__(user)
         self._path = path
         print(user.str_name() + " posted a picture""\n")
 
+    #string to string function of image post
     def __str__(self):
         return self._creator.str_name() + " posted a picture\n"
 
+    #This function show the picture from twitter
     def display(self):
         img = mpimg.imread(self._path)
-        imgplot = plt.imshow(img)
+        plt.imshow(img)
         plt.show()
         print("Shows picture")
 
 
 class SalePost(Post):
+    # Constructor for to sale post
     def __init__(self, user, cur_product, price, place):
         super().__init__(user)
         # self._product = []
@@ -90,16 +99,19 @@ class SalePost(Post):
         print(user.str_name() + " posted a product for sale:\n" + "For sale! " + self._cur_product +
               ", price: " + str(self._price) + ", pickup from: " + self._place + "\n")
 
+    #This function calculate the discount of products from post and update this
     def discount(self, rebate, password):
         if password == self.get_creator().password:
             self._price = self._price * (1 - rebate / 100)
             print("Discount on " + self.get_creator().str_name() + " product! the new price is: 37800.0")
 
+    #Function that update if products is sold
     def sold(self, password):
         if password == self.get_creator().password:
             _cur_product = None
             print(self.get_creator().str_name() + "'s product is sold")
 
+    #String to string for sale post
     def __str__(self):
         if self._cur_product is not None:
             return (self.get_creator().str_name() + " posted a product for sale:\n"
@@ -110,4 +122,4 @@ class SalePost(Post):
                                                      "For sale! " + self._cur_product +
                     ", price: " + str(self._price) + ", pickup from: " + self._place + "\n")
 
-# if self._creator._strname_() !=user._strname_():
+
